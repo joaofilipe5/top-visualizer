@@ -1,73 +1,49 @@
-# React + TypeScript + Vite
+# Travelling Purchaser Problem Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive operations research tool for exploring joint purchasing and routing decisions. Choose markets, assign products to suppliers, and inspect how construction heuristics and local search trade off travel costs, purchase costs and constraint penalties.
 
-Currently, two official plugins are available:
+## Problem and methods
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The Travelling Purchaser Problem combines a depot-based tour with product procurement. The implementation tracks travel cost, purchase cost, penalty cost, total cost and feasibility for each candidate solution.
 
-## React Compiler
+Five strategies are available: cheapest-purchase-first, greedy market insertion, regret construction, product-anxiety construction and local search. Routing utilities include nearest-neighbour construction and 2-opt. Heuristics are approximate; the application does not certify global optimality.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- Generated instances with configurable product availability, prices, demand, spatial patterns and random seed.
+- Step-by-step heuristic playback and manual market selection.
+- Hard and soft rules covering incompatible products/markets, purchases, forbidden edges, precedence, budgets and visit requirements.
+- Strict, repair and penalty search modes for local search.
+- Portugal and United States map boundaries, cost breakdowns, violation inspection and PDF export.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Run locally
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Use Node.js 22.12+ (or a later supported version) and npm.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm ci
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open the local URL printed by Vite. Generate an instance, select a heuristic and use the playback controls to inspect its decisions. Edit the rulebook to compare constrained solutions.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm test
+npm run build
+npm run preview
 ```
+
+## Repository map
+
+| Path | Purpose |
+| --- | --- |
+| `src/heuristics/` | Construction algorithms, routing and local improvement |
+| `src/rules/` | Constraint generation, validation and repair |
+| `src/data/` | Instance generation, presets and map data |
+| `src/components/` | Visualization and interactive controls |
+| `src/state/` | Application state |
+| `src/__tests__/` | Existing generator, rule and heuristic tests |
+
+## Scope
+
+This is an exploratory visualizer implemented in React, TypeScript and Vite. Results depend on the generated instance, enabled rules and search settings. Map coordinates are a modelling aid, not a road-network travel-time dataset. It contains no published benchmark proving approximation guarantees or superiority over exact solvers.
